@@ -16,7 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ContainerManagement\" />
+      <Folder Include="ContainerManagement\Application\" />
+      <Folder Include="ContainerManagement\Domain\" />
       <Folder Include="Shared\" />
     </ItemGroup>
 
