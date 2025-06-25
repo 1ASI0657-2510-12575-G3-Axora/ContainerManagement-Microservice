@@ -9,10 +9,14 @@ namespace DittoBox.API.ContainerManagement.Application.Handlers.Internal
 		ITemplateService templateService
 	) : IGetTemplateQueryHandler
     {
-        public async Task<TemplateResource?> Handle(GetTemplateQuery query)
-        {
-			var template = await templateService.GetTemplate(query.TemplateId);
-			return TemplateResource.FromTemplate(template);
-        }
+	    public async Task<TemplateResource?> Handle(GetTemplateQuery query)
+	    {
+		    var template = await templateService.GetTemplate(query.TemplateId);
+
+		    if (template == null)
+			    return null;
+
+		    return TemplateResource.FromTemplate(template);
+	    }
     }
 }
