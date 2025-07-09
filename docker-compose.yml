@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres-container:
+    image: postgres:16
+    container_name: postgres_container_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: axora_container_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_container_data:/var/lib/postgresql/data
+
+  container-management:
+    build:
+      context: .
+      dockerfile: ContainerManagement-Microservice/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - POSTGRES_CONNECTION_STRING=Host=postgres-container;Port=5432;Database=axora_container_db;Username=postgres;Password=12345678
+      - RESET_DATABASE=true
+    depends_on:
+      - postgres-container
+    restart: always
+
+volumes:
+  postgres_container_data:

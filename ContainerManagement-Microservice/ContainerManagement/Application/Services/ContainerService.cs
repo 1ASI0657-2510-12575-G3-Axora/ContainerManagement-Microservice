@@ -12,14 +12,29 @@ namespace DittoBox.API.ContainerManagement.Application.Services
 	{
 		public async Task<Container> CreateContainer(string uiid, string name, string description, int accountId, int groupId)
 		{
-			var container = await containerRepository.GetContainerByUuid(uiid) ?? throw new Exception("Container hasn't been self registered yet. Make sure to turn it on first.");
+			var container = await containerRepository.GetContainerByUuid(uiid);
+			if (container == null)
+			{
+				container = new Container
+				{
+					Uiid = uiid,
+					Name = name,
+					Description = description,
+					AccountId = accountId,
+					GroupId = groupId
+				};
+				await containerRepository.Add(container);
+			}
+			else
+			{
+				container.Name = name;
+				container.Description = description;
+				container.AccountId = accountId;
+				container.GroupId = groupId;
 
-			container.Name = name;
-			container.Description = description;
-			container.AccountId = accountId;
-			container.GroupId = groupId;
+				await containerRepository.Update(container);
+			}
 
-			await containerRepository.Update(container);
 			await unitOfWork.CompleteAsync();
 			return container;
 		}
